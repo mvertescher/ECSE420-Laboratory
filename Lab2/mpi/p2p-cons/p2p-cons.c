@@ -239,6 +239,7 @@ void p2p_cons_report_result(struct GEmpi *param)
       MPI_Send(&buf, 1, MPI_INT, cur_rank, 1, MPI_COMM_WORLD);
       MPI_Recv(&buf, 1, MPI_INT, cur_rank, 1, MPI_COMM_WORLD, &status);
     }
+    printf("%f %f %f\n", param->t_exec, param->t_proc, param->t_comm); 
   } else {
     MPI_Recv(&buf, 1, MPI_INT, 0, 1, MPI_COMM_WORLD, &status);
     write_to_file(file_name, param);

@@ -24,17 +24,33 @@ cd ./bcast-cycl && make && cd ..
 #mpiexec -np 2 ./bcast-cons/program 1024
 #mpiexec -np 4 ./bcast-cons/program 1024
 
-echo 'Running Gaussian Elimination'
 
+
+
+# Assume folder hist created
+echo 'Creating Gaussian Elimination Histograms'
 for (( N = 1024; N<=4096; N*=2 )) do
 	for (( P = 2; P<=16; P*=2 )) do
+		histfile="./hist/$N-$P.dat"
+		rm $datfile
+
+		echo "version t_exec t_proc t_comm" >> $histfile
 		echo 'Running p2p-cons N = '$N ' P = '$P 
-		mpiexec -np $P ./p2p-cons/program $N
+		echo "p2p-cons "$(mpiexec -np $P ./p2p-cons/program $N) >> $histfile
 		echo 'Running p2p-cycl N = '$N ' P = '$P 
-		mpiexec -np $P ./p2p-cycl/program $N
+		echo "p2p-cycl "$(mpiexec -np $P ./p2p-cycl/program $N) >> $histfile
 		echo 'Running bcast-cons N = '$N ' P = '$P 
-		mpiexec -np $P ./bcast-cons/program $N
+		echo "bcast-cons "$(mpiexec -np $P ./bcast-cons/program $N) >> $histfile
 		echo 'Running bcast-cycl N = '$N ' P = '$P 
-		mpiexec -np $P ./bcast-cycl/program $N
+		echo "bcast-cycl "$(mpiexec -np $P ./bcast-cycl/program $N) >> $histfile
+	
+		# If the there are 4 procs, then append results to speedup file		
+		if [ "$P" = "4" ]; then
+
+		fi
+
+		break
 	done
+	break
 done
+

@@ -240,7 +240,7 @@ void p2p_cycl_reduce_rows(struct GEmpi *param)
  */
 void p2p_cycl_report_result(struct GEmpi *param) 
 {
-  //printf("rank = %i | blocking_factor = %i | t_exec = %f | t_proc = %f | t_comm = %f \n", param->rank, param->blocking_factor, param->t_exec, param->t_proc, param->t_comm); 
+  //printf("rank = %i | blocking_factor = %i | t_exec = %f | t_proc = %f | t_comm = %f \n", param->rank, param->blocking_factor, param->t_exec, param->t_proc, param->t_comm);  
   
   int N = param->N;
   int size = param->size;  
@@ -261,6 +261,7 @@ void p2p_cycl_report_result(struct GEmpi *param)
       MPI_Send(&buf, 1, MPI_INT, cur_rank, 1, MPI_COMM_WORLD);
       MPI_Recv(&buf, 1, MPI_INT, cur_rank, 1, MPI_COMM_WORLD, &status);
     }
+    printf("%f %f %f\n", param->t_exec, param->t_proc, param->t_comm);
   } else {
     MPI_Recv(&buf, 1, MPI_INT, 0, 1, MPI_COMM_WORLD, &status);
     write_to_file(file_name, param);
