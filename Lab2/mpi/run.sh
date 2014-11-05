@@ -1,4 +1,6 @@
-#!/bin/sh
+#!/bin/bash
+
+#time ./run.sh
 
 cd ./p2p-cons && make && cd ..
 cd ./p2p-cycl && make && cd ..
@@ -6,27 +8,12 @@ cd ./bcast-cons && make && cd ..
 cd ./bcast-cycl && make && cd ..
 
 # Size of matrix N (1024, 2048, 4096)
-#N=4
 # Number of processes P (2, 4, 8, 16)
-#P=2
-
-#mpiexec -np $P ./p2p-cons/program $N
-#mpiexec -np $P ./p2p-cycl/program $N
-#mpiexec -np $P ./bcast-cons/program $N
-#mpiexec -np $P ./bcast-cycl/program $N
-
-#mpiexec -np 4 ./p2p-cycl/program 20
-#mpiexec -np 4 ./bcast-cycl/program 20
-#mpiexec -np 8 ./bcast-cycl/program 1024
-
-#mpiexec -np 3 ./bcast-cons/program 9
-#mpiexec -np 2 ./bcast-cons/program 1024
-#mpiexec -np 4 ./bcast-cons/program 1024
 
 serial_exec="1"
 
 # Assume folder hist created
-echo 'Creating Gaussian Elimination Histograms'
+echo 'Creating Gaussian Elimination histograms and charts'
 for (( N = 1024; N<=4096; N*=2 )) do
 	speedupfile="./speedup/speedup$N.dat"
 	rm $speedupfile
@@ -64,17 +51,13 @@ for (( N = 1024; N<=4096; N*=2 )) do
 		echo "bcast-cons $bcast_cons_exec $bcast_cons_proc $bcast_cons_comm" >> $histfile
 		echo "bcast-cycl $bcast_cycl_exec $bcast_cycl_proc $bcast_cycl_comm" >> $histfile
 
-		# If the there are 4 procs, then append results to speedup file		
-		#if [ "$P" = "4" ]; then
 		p2p_cons_su=$(bc <<< "scale = 10; $serial_exec / $p2p_cons_exec")
 		p2p_cycl_su=$(bc <<< "scale = 10; $serial_exec / $bcast_cycl_exec")
 		bcast_cons_su=$(bc <<< "scale = 10; $serial_exec/ $p2p_cons_exec")
 		bcast_cycl_su=$(bc <<< "scale = 10; $serial_exec / $bcast_cycl_exec")
 		echo "$P $p2p_cons_su $p2p_cycl_su $bcast_cons_su $bcast_cycl_su"
 		echo "$P $p2p_cons_su $p2p_cycl_su $bcast_cons_su $bcast_cycl_su" >> $speedupfile
-		#break
-		#fi
 	done
-	#break
 done
 
+exit 0

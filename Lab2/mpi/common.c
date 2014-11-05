@@ -72,9 +72,7 @@ double *initialize_row(double *row, int num_cols)
 {
   int i;
   for (i = 0; i < num_cols; i++) {
-    row[i] =  (double) ((rand() % 10) + 1);
-    //row[i] = (double) ((double) rand() / (double) 20000000) + 1; 
-    // RAND_MAX
+    row[i] =  (double) ((rand() % 100) + 1);
   }  
   return row;
 }

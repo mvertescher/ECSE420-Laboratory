@@ -97,7 +97,7 @@ void bcast_cycl_distribute_rows(struct GEmpi *param)
   int r = 0;
   //printf("\nPrinting input matrix:\n");
 
-  double *buffer;
+  double *buffer = allocate_row(N);
   double t1;
 
   // Cyclic distribution of blocks
@@ -108,7 +108,6 @@ void bcast_cycl_distribute_rows(struct GEmpi *param)
       //print_row(R[r], N);
       r++;
     } else {
-      buffer = allocate_row(N);
       buffer = initialize_row(buffer, N);
       //printf(" RANK = %i  ",cur_rank); 
       //print_row(buffer, N);
@@ -118,7 +117,7 @@ void bcast_cycl_distribute_rows(struct GEmpi *param)
     }
     cur_rank++;
   }
-
+  free(buffer);
 }
 
 /**
@@ -233,7 +232,7 @@ void bcast_cycl_report_result(struct GEmpi *param)
   int N = param->N;
   int size = param->size;  
   int rank = param->rank; 
-  double **R = param->R;
+  free(param->R);
   int blocking_factor = param->blocking_factor;
 
   MPI_Status status;

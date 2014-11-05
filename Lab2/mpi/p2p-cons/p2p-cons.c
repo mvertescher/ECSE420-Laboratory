@@ -20,7 +20,6 @@ void p2p_cons_report_result(struct GEmpi *param);
  */
 int main(int argc,char** argv)
 {
-	//int N = ((int) argv[1][0]) - 48;
   int N = atoi(argv[1]);
   int sum,size,rank;
   MPI_Status status;
@@ -104,11 +103,10 @@ void p2p_cons_distribute_rows(struct GEmpi *param)
   }
 
   // Send to procs with blocking_factor rows
-  double *buffer;
+  double *buffer = allocate_row(N);
   double t1;
   for (cur_rank = 1; cur_rank < size; cur_rank++) {
     for (r = 0; r < blocking_factor; r++) {
-      buffer = allocate_row(N);
       buffer = initialize_row(buffer, N);
       //print_row(buffer, N);
       //printf("Root about to send row to (rank = %i)\n", cur_rank);
@@ -117,6 +115,7 @@ void p2p_cons_distribute_rows(struct GEmpi *param)
       param->t_comm += timer() - t1;
     }
   }
+  free(buffer);
 }
 
 /**
@@ -223,7 +222,7 @@ void p2p_cons_report_result(struct GEmpi *param)
   int N = param->N;
   int size = param->size;  
   int rank = param->rank; 
-  double **R = param->R;
+  free(param->R);
   int blocking_factor = param->blocking_factor;
 
   MPI_Status status;
