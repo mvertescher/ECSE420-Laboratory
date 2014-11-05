@@ -1,0 +1,3 @@
+N size rank blocking_factor t_exec t_proc t_comm
+1024 2 0 512 2.463083 2.398979 0.064104 
+1024 2 1 512 2.463092 2.348201 0.114891 
