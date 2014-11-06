@@ -52,8 +52,8 @@ for (( N = 1024; N<=4096; N*=2 )) do
 		echo "bcast-cycl $bcast_cycl_exec $bcast_cycl_proc $bcast_cycl_comm" >> $histfile
 
 		p2p_cons_su=$(bc <<< "scale = 10; $serial_exec / $p2p_cons_exec")
-		p2p_cycl_su=$(bc <<< "scale = 10; $serial_exec / $bcast_cycl_exec")
-		bcast_cons_su=$(bc <<< "scale = 10; $serial_exec/ $p2p_cons_exec")
+		p2p_cycl_su=$(bc <<< "scale = 10; $serial_exec / $p2p_cycl_exec")
+		bcast_cons_su=$(bc <<< "scale = 10; $serial_exec/ $bcast_cons_exec")
 		bcast_cycl_su=$(bc <<< "scale = 10; $serial_exec / $bcast_cycl_exec")
 		echo "$P $p2p_cons_su $p2p_cycl_su $bcast_cons_su $bcast_cycl_su"
 		echo "$P $p2p_cons_su $p2p_cycl_su $bcast_cons_su $bcast_cycl_su" >> $speedupfile
