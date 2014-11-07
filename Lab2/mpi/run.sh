@@ -16,7 +16,7 @@ serial_exec="1"
 echo 'Creating Gaussian Elimination histograms and charts'
 for (( N = 1024; N<=4096; N*=2 )) do
 	speedupfile="./speedup/speedup$N.dat"
-	rm $speedupfile
+	rm -f $speedupfile
 	if [ "$N" = "1024" ]; then
 		serial_exec="3.7552061081"
 	elif [ "$N" = "2048" ]; then
@@ -28,17 +28,7 @@ for (( N = 1024; N<=4096; N*=2 )) do
 	echo "P p2p-cons p2p-cycl bcast-cons bcast-cycl" >> $speedupfile
 	for (( P = 2; P<=16; P*=2 )) do
 		histfile="./hist/$N-$P.dat"
-		rm $histfile
-
-		#echo "version t_exec t_proc t_comm" >> $histfile
-		#echo 'Running p2p-cons N = '$N ' P = '$P 
-		#echo "p2p-cons "$(mpiexec -np $P ./p2p-cons/program $N) >> $histfile
-		#echo 'Running p2p-cycl N = '$N ' P = '$P 
-		#echo "p2p-cycl "$(mpiexec -np $P ./p2p-cycl/program $N) >> $histfile
-		#echo 'Running bcast-cons N = '$N ' P = '$P 
-		#echo "bcast-cons "$(mpiexec -np $P ./bcast-cons/program $N) >> $histfile
-		#echo 'Running bcast-cycl N = '$N ' P = '$P 
-		#echo "bcast-cycl "$(mpiexec -np $P ./bcast-cycl/program $N) >> $histfile
+		rm -f $histfile
 		
 		IFS=$' ' read p2p_cons_exec p2p_cons_proc p2p_cons_comm <<< $(mpiexec -np $P ./p2p-cons/program $N)
 		IFS=$' ' read p2p_cycl_exec p2p_cycl_proc p2p_cycl_comm <<< $(mpiexec -np $P ./p2p-cycl/program $N)

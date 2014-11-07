@@ -154,13 +154,13 @@ void p2p_cons_eliminate(struct GEmpi *param) {
   }
 
   // Eliminate owned rows, standard GE
-  for (row = 0; row < blocking_factor - 1; row++) {
+  /*for (row = 0; row < blocking_factor - 1; row++) {
     for (r = row + 1; r < blocking_factor; r++) {
       factor = R[r][row + pivot] / R[row][row + pivot];
       for (col = 0; col < N; col++) 
         R[r][col] = R[r][col] - factor * R[row][col];
     }
-  }
+  }*/
 
   // For every row owned
   for (row = 0; row < blocking_factor; row++) {
@@ -170,6 +170,13 @@ void p2p_cons_eliminate(struct GEmpi *param) {
       t1 = timer();
       MPI_Send(&R[row][pivot], N - pivot, MPI_DOUBLE, cur_rank, 1, MPI_COMM_WORLD);
       param->t_comm += timer() - t1;
+    }
+    if (row == blocking_factor - 1 ) { break; }
+    // Eliminate owned rows, standard GE
+    for (r = row + 1; r < blocking_factor; r++) {
+      factor = R[r][pivot] / R[row][pivot];
+      for (col = 0; col < N; col++) 
+        R[r][col] = R[r][col] - factor * R[row][col];
     }
     pivot++;
   }
