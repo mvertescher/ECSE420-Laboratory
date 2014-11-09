@@ -140,7 +140,7 @@ void bcast_cons_eliminate(struct GEmpi *param) {
     for (r = 0; r < blocking_factor; r++) {
       // Receive the row
       t1 = timer();
-      //MPI_Recv(&buffer[pivot], N - pivot, MPI_DOUBLE, cur_rank, 1, MPI_COMM_WORLD,&status);
+      //printf("Rank %i | RECV row = %i \n", rank, r);
       MPI_Bcast(&buffer[pivot], N - pivot, MPI_DOUBLE, cur_rank, MPI_COMM_WORLD);
       param->t_comm += timer() - t1;
       // Eliminate the buffered row to all rows this proc owns
@@ -162,14 +162,14 @@ void bcast_cons_eliminate(struct GEmpi *param) {
         R[r][col] = R[r][col] - factor * R[row][col];
     }
   } */
-
+  
   // For every row owned
   for (row = 0; row < blocking_factor; row++) {
     t1 = timer();
-    //MPI_Send(&R[row][pivot], N - pivot, MPI_DOUBLE, cur_rank, 1, MPI_COMM_WORLD);
+    //printf("Rank %i | SEND row = %i \n", rank, row);
     MPI_Bcast(&R[row][pivot], N - pivot, MPI_DOUBLE, rank, MPI_COMM_WORLD);
     param->t_comm += timer() - t1;
-    if (row == blocking_factor - 1 ) { break; }
+    if (row == blocking_factor - 1 ) { pivot++; break; }
     // Eliminate owned rows, standard GE
     for (r = row + 1; r < blocking_factor; r++) {
       factor = R[r][pivot] / R[row][pivot];
@@ -178,6 +178,7 @@ void bcast_cons_eliminate(struct GEmpi *param) {
     }
     pivot++;
   }
+  //printf("Rank %i | DONE SENDING \n", rank);
 
   // Listen for excess broadcasts 
   for (cur_rank = rank + 1; cur_rank < size; cur_rank++) {
@@ -188,6 +189,7 @@ void bcast_cons_eliminate(struct GEmpi *param) {
       pivot++;
     }
   }
+
 }
 
 /**
@@ -230,8 +232,10 @@ void bcast_cons_reduce_rows(struct GEmpi *param)
  */
 void bcast_cons_report_result(struct GEmpi *param) 
 {
-  //printf("rank = %i | blocking_factor = %i | t_exec = %f | t_proc = %f | t_comm = %f \n", param->rank, param->blocking_factor, param->t_exec, param->t_proc, param->t_comm); 
-  
+  /*printf("rank = %i | blocking_factor = %i | t_exec = %f | t_proc = %f | t_comm = %f \n", 
+    param->rank, param->blocking_factor, param->t_exec, param->t_proc, param->t_comm); 
+  return;*/
+
   int N = param->N;
   int size = param->size;  
   int rank = param->rank; 

@@ -224,8 +224,11 @@ void p2p_cons_reduce_rows(struct GEmpi *param)
  */
 void p2p_cons_report_result(struct GEmpi *param) 
 {
-  //printf("rank = %i | blocking_factor = %i | t_exec = %f | t_proc = %f | t_comm = %f \n", param->rank, param->blocking_factor, param->t_exec, param->t_proc, param->t_comm); 
-  
+  /*MPI_Barrier(MPI_COMM_WORLD);
+  printf("rank = %i | blocking_factor = %i | t_exec = %f | t_proc = %f | t_comm = %f \n", 
+    param->rank, param->blocking_factor, param->t_exec, param->t_proc, param->t_comm); 
+  return;*/
+
   int N = param->N;
   int size = param->size;  
   int rank = param->rank; 
