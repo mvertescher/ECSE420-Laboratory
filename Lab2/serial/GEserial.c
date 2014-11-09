@@ -40,9 +40,12 @@ int main(int argc,char** argv)
   //printMatrix(A, X, Y);
 
   endSer = timer();
-
   t_exec = endSer - begSer;
-  printf("Serial N = %i  t_exec = %.10e \n", N, t_exec);  
+
+  free(A);
+  
+  //printf("Serial N = %i  t_exec = %.10e \n", N, t_exec);  
+  printf("%f\n", t_exec);
 
   return 0; 
 
